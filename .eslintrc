@@ -1,0 +1,15 @@
+{
+  "extends": "eslint:recommended",
+  "parser": "babel-eslint",
+  "plugins": ["react"],
+  "env": {
+    "browser": true
+  },
+  "rules": {
+    "strict": 0,
+    "react/jsx-uses-react": 1
+  },
+  "globals": {
+    "require": true
+  }
+}

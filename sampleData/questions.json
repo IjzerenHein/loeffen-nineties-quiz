@@ -1,0 +1,18 @@
+{
+	"vraag1": {
+		"text": "Heb je wel eens meer uren ingevuld dan je daadwerkelijk gewerkt hebt?",
+		"options": {
+			"ja": "Ja",
+			"nee": "Nee"
+		}
+	},
+	"vraag2": {
+		"text": "Hoe heette de Marokkaan die destijds in het busje rond reed?",
+		"options": {
+			"mohammed": "Mohammed",
+			"abdul": "Abdul",
+			"chris": "Chris"
+		},
+		"answer": "mohammed"
+	}
+}
