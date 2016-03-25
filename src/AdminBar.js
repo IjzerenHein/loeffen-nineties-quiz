@@ -16,9 +16,8 @@ const styles = StyleSheet.create({
 		resizeMode: 'contain'
 	},
 	title: {
-		color: Theme.lightColor,
-		fontFamily: Theme.fontFamily,
-		fontSize: 30
+		width: 260,
+		resizeMode: 'contain'
 	},
 	buttons: {
 		flexDirection: 'row',
@@ -48,7 +47,7 @@ const AdminBar = (props) => {
 	const nextEnabled = (quiz.status === 'started') && quiz.activeQuestion && (quiz.questionIds.indexOf(quiz.activeQuestion.id) < (quiz.questionIds.length - 1));
 	return <View style={[style, styles.main]} {...viewProps}>
 		<Image style={styles.logo} source={require('../assets/loeffen-wit.png')} />
-		<Text style={styles.title}>NINETIES QUIZ</Text>
+		<Image style={styles.title} source={require('../assets/title.png')} />
 		<View style={styles.buttons}>
 			<TextButton
 				text='vorige'

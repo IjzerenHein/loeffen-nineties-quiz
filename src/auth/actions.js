@@ -24,7 +24,6 @@ export default class {
 			});
 			const waitForAuth = () => {
 				ref.onAuth((authData) => {
-					console.log('onAuth');
 					if (!authData) {
 						uid = undefined;
 						userRef.setRef(undefined);
@@ -37,7 +36,6 @@ export default class {
 					const onlineRef = userRef.ref.child('online');
 					connectedRef.on('value', (snapshot) => {
 						if (snapshot.val()) {
-							console.log('nu');
 							onlineRef.onDisconnect().set(false);
 							onlineRef.set(true);
 						}

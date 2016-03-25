@@ -1,5 +1,6 @@
 import React, {View, StyleSheet, Text, TouchableOpacity} from 'react-native';
 import {connect} from 'react-redux';
+import tinycolor from 'tinycolor2';
 import Button from './Button';
 import Theme from './Theme';
 import QuizActions from './quiz/actions';
@@ -15,16 +16,15 @@ const styles = StyleSheet.create({
 		color: Theme.themeColor,
 		fontFamily: Theme.fontFamily,
 		fontSize: 42,
-		lineHeight: 48,
-		padding: 30,
+		padding: 20,
 		textAlign: 'left'
 	},
 	answer: {
-		color: Theme.themeColor,
+		color: tinycolor(Theme.themeColor).setAlpha(0.5).toString(),
 		fontFamily: Theme.fontFamily,
 		fontSize: 42,
 		lineHeight: 48,
-		padding: 30,
+		padding: 20,
 		textAlign: 'left'
 	},
 	showAnswer: {
@@ -65,13 +65,14 @@ const AdminQuestionView = (props) => {
 			style={styles.button}
 			text={question.options[optionId]}
 			progress={voteKeys.length ? (count / voteKeys.length) : 0}
+			styleClass='vote'
 		/>;
 	});
 
 	let answer;
 	if (question.answer) {
 		answer = question.answerVisible ? 
-		<Text style={styles.answer}>Antwoord: <Text style={{fontWeight: 'bold'}}>{question.options[question.answer]}</Text></Text> :
+		<Text style={styles.answer}>Antwoord: <Text style={{color: Theme.themeColor}}>{question.options[question.answer]}</Text></Text> :
 		<TouchableOpacity onPress={() => dispatch(QuizActions.showAnswer(!question.answerVisible))}>
 			<Text style={styles.showAnswer}>
 				{question.answerVisible ? 'Verberg' : 'Toon'} antwoord
@@ -80,7 +81,7 @@ const AdminQuestionView = (props) => {
 	}
 
 	return <View style={[style, styles.main]} >
-		<Text style={styles.text}>{question.text}</Text>
+		<Text style={styles.text}>“{question.text}”</Text>
 		{answer}
 		<View style={styles.buttons}>
 			{buttons}

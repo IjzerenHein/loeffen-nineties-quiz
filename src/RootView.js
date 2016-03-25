@@ -14,13 +14,6 @@ const styles = StyleSheet.create({
 		flexDirection: 'column',
 		justifyContent: 'space-between'
 	},
-	headerText: {
-		color: Theme.lightColor,
-		fontFamily: Theme.fontFamily,
-		fontSize: 40,
-		textAlign: 'center',
-		paddingTop: 70
-	},
 	footerText: {
 		color: Theme.lightColor,
 		fontFamily: Theme.fontFamily,
@@ -40,10 +33,10 @@ const styles = StyleSheet.create({
 	imageView: {
 		flexDirection: 'row',
 		justifyContent: 'center',
-		height: 140
+		height: 200
 	},
 	image: {
-		height: 140,
+		height: 200,
 		resizeMode: 'contain'
 	},
 	loader: {
@@ -124,9 +117,9 @@ class RootView extends React.Component {
 			keyboardDismissMode='interactive'
 			onLayout={this.onMeasureHeight}>
 			<View style={[styles.main, {height: this.state.viewHeight}]} >
-				<Text style={styles.headerText}>NINETIES QUIZ</Text>
+				<View />
 				<View style={styles.imageView}>
-					<Image style={styles.image} source={require('../assets/loeffen-wit.png')} />
+					<Image style={styles.image} source={require('../assets/logo.png')} />
 				</View>
 				{footer}
 			</View>

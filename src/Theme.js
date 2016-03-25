@@ -1,5 +1,6 @@
 export default {
-	fontFamily: 'Heiti SC',
-	themeColor: '#252559',
+	fontFamily: 'Lantinghei SC',
+	//themeColor: '#252559',
+	themeColor: '#253762',
 	lightColor: '#FFFFFF'
 }

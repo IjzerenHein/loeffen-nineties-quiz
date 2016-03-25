@@ -5,7 +5,6 @@ import StyleSheetPropType from 'StyleSheetPropType';
 const styles = StyleSheet.create({
 	container: {
 		flexDirection: 'row',
-		justifyContent: 'center',
 		overflow: 'hidden'
 	},
 	fill: {
@@ -28,30 +27,31 @@ export default class ProgressText extends React.Component {
 
 	static defaultProps = {
 		style: {
-			color: '#000000',
+			color: '#0000FF', // fill-color
 			backgroundColor: '#FFFFFF'
 		},
-		progress: 0
+		textStyle: {
+			textAlign: 'center'
+		},
+		progress: 0,
+		textColor: undefined
 	};
 
 	constructor() {
 		super();
 		this.state = {
 			containerWidth: 0,
-			containerHeight: 0,
-			textWidth: 0
+			containerHeight: 0
 		};
 		this._onMeasureContainer = (event) => this.onMeasureContainer(event);
-		this._onMeasureText = (event) => this.onMeasureText(event);
 	}
 
 	render() {
-		const {textStyle, progress, children} = this.props;
+		const {textStyle, progress, children, textColor} = this.props;
 		LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
 
-		const {containerWidth, containerHeight, textWidth} = this.state;
+		const {containerWidth, containerHeight} = this.state;
 		const fillWidth = containerWidth * progress;
-		const fillTextLeft = Math.min((containerWidth - textWidth) / 2, fillWidth);
 		const {color, backgroundColor, ...style} = StyleSheet.flatten(this.props.style);
 		//console.log('containerWidth: ', containerWidth, ', fillWidth: ', fillWidth, ', fillTextLeft: ', fillTextLeft, ', color: ', color, ', progress: ', progress);
 		return <View
@@ -60,14 +60,10 @@ export default class ProgressText extends React.Component {
 				styles.container,
 				{backgroundColor: backgroundColor}]}
 			onLayout={this._onMeasureContainer}>
-			<Text
-				style={[textStyle, {color: color}]}
-				onLayout={this._onMeasureText}>
+			<View style={[styles.fill, {backgroundColor: color, width: fillWidth, height: containerHeight}]} />
+			<Text style={[textStyle, {color: textColor || color, paddingLeft: 20, textAlign: 'center'}]}>
 				{children}
 			</Text>
-			<View style={[styles.fill, {backgroundColor: color, width: fillWidth, height: containerHeight, paddingLeft: fillTextLeft}]}>
-				<Text style={[textStyle, {color: backgroundColor, marginLeft: 0}]}>{children}</Text>
-			</View>
 		</View>;
 	}
 
@@ -75,12 +71,6 @@ export default class ProgressText extends React.Component {
 		this.setState({
 			containerWidth: event.nativeEvent.layout.width,
 			containerHeight: event.nativeEvent.layout.height
-		});
-	}
-
-	onMeasureText(event) {
-		this.setState({
-			textWidth: event.nativeEvent.layout.width
 		});
 	}
 }

@@ -41,7 +41,7 @@ class AppView extends React.Component {
 				this.navigator.resetTo({type: 'admin'});
 			}
 		}
-		else if ((auth.status === 'loggedIn') && (quiz.state === 'started') && quiz.activeQuestion) {
+		else if ((auth.status === 'loggedIn') && (quiz.status === 'started') && quiz.activeQuestion) {
 			if (this.navigator && (!this.route || (this.route.type !== 'question') || (this.route.questionId !== quiz.activeQuestion.id))) {
 				this.navigator.push({type: 'question', questionId: quiz.activeQuestion.id});
 			}

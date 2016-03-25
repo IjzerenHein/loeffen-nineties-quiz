@@ -1,14 +1,19 @@
 import React, {StyleSheet, TouchableOpacity, ActivityIndicatorIOS, PropTypes} from 'react-native';
+import tinycolor from 'tinycolor2';
 import Theme from './Theme';
 import ProgressText from './ProgressText';
 
 const styles = StyleSheet.create({
-	main: {
+	regular: {
 		color: Theme.themeColor,
 		backgroundColor: Theme.lightColor,
-		borderColor: Theme.themeColor,
 		borderStyle: 'solid',
-		borderWidth: 2,
+		borderWidth: 1,
+		borderRadius: 8
+	},
+	vote: {
+		color: Theme.themeColor,
+		backgroundColor: tinycolor(Theme.themeColor).setAlpha(0.5).toString(),
 		borderRadius: 8
 	},
 	textStyle: {
@@ -29,11 +34,13 @@ export default class Button extends React.Component {
 		highlighted: PropTypes.bool,
 		onPress: PropTypes.func,
 		progress: PropTypes.number,
-		text: PropTypes.string
+		text: PropTypes.string,
+		styleClass: PropTypes.oneOf(['regular', 'vote'])
 	};
 
 	static defaultProps = {
-		progress: 0
+		progress: 0,
+		styleClass: 'regular'
 	};
 
 	constructor() {
@@ -42,14 +49,15 @@ export default class Button extends React.Component {
 	}
 
 	render() {
-		const {disabled, text, style, progress, onPress, ...props} = this.props;
+		const {disabled, text, style, styleClass, progress, onPress, ...props} = this.props;
 		const content = this.props.loading ?
 			<ActivityIndicatorIOS
 				style={styles.loader}
 				animating={true} /> :
 			<ProgressText
-				style={styles.main}
+				style={styles[styleClass]}
 				textStyle={styles.textStyle}
+				textColor={(styleClass === 'vote') ? Theme.lightColor : undefined}
 				progress={progress}>
 				{text}
 			</ProgressText>
