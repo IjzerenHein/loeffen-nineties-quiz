@@ -12,6 +12,9 @@ const styles = StyleSheet.create({
 		left: 0,
 		top: 0,
 		overflow: 'hidden'
+	},
+	text: {
+		flex: 1
 	}
 });
 
@@ -61,7 +64,7 @@ export default class ProgressText extends React.Component {
 				{backgroundColor: backgroundColor}]}
 			onLayout={this._onMeasureContainer}>
 			<View style={[styles.fill, {backgroundColor: color, width: fillWidth, height: containerHeight}]} />
-			<Text style={[textStyle, {color: textColor || color, paddingLeft: 20, textAlign: 'center'}]}>
+			<Text style={[textStyle, {color: textColor || color}, styles.text]}>
 				{children}
 			</Text>
 		</View>;

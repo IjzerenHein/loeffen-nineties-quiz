@@ -8,7 +8,9 @@ import AuthActions from './auth/actions';
 const styles = StyleSheet.create({
 	scrollView: {
 		flex: 1,
-		backgroundColor: Theme.themeColor
+		backgroundColor: Theme.themeColor,
+		paddingLeft: 20,
+		paddingRight: 20
 	},
 	main: {
 		flexDirection: 'column',
@@ -44,7 +46,8 @@ const styles = StyleSheet.create({
 		paddingBottom: 40
 	},
 	buttons: {
-		padding: 20
+		paddingBottom: 20,
+		paddingTop: 20
 	},
 	name: {
 		backgroundColor: Theme.themeColor,
@@ -74,42 +77,67 @@ class RootView extends React.Component {
 	}
 
 	render() {
-		LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+		if (this._initLayoutAnimation) {
+			LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+		}
+		this._initLayoutAnimation = this._initLayoutAnimation || (this.state.viewHeight > 0);
 		let footer;
-		switch (this.props.auth.status) {
-			case 'loggingIn':
-				footer = <Loader style={styles.loader} size='large'/>;
-				break;
-			case 'loggedIn':
-				footer = <View>
-					<Text style={styles.footerText}>Hoi {this.props.auth.name}, je bent aangemeld!</Text>
-					<Text style={styles.footerText2}>De quiz gaat vanzelf van start...</Text>
-					<Loader style={styles.footerLoader} size='large'/>
-				</View>;
-				break;
-			default:
-				const signingUp = (this.props.auth.status === 'signingUp');
-				const editable = (this.props.auth.status === 'loggedOut');
-				footer = <View style={styles.buttons} ref='buttons'>
-					<TextInput
-						style={[styles.name, !editable ? {opacity: 0.5} : undefined]}
-						ref='name'
-						editable={!signingUp}
-						placeholder='vul hier je naam in'
-						placeholderTextColor='rgba(255,255,255,0.5)'
-						autoCorrect={false}
-						onChangeText={(text) => this.setState({name: text})}
-						onFocus={this.onFocusTextInput}
-						onBlur={this.onBlurTextInput}
-					/>
-					<Button
-						disabled={!editable}
-						loading={this.props.auth.status === 'signingUp'}
-						text='Deelnemen'
-						onPress={() => this._onJoin()} 
-					/>
-				</View>;
-				break;
+		//console.log('auth: ', this.props.auth.status, ', quiz: ', this.props.quiz.status);
+		if ((this.props.quiz.status === 'launchScreen') || (this.props.quiz.status === 'notInitialized')) {
+			footer = <View />;
+		} else if (this.props.auth.status === 'loggingIn') {
+			footer = <Loader style={styles.loader} size='large'/>;
+		} else if (this.props.auth.status === 'loggedIn') {
+			switch (this.props.quiz.status) {
+				case 'notStarted':
+					footer = <View>
+						<Text style={styles.footerText}>Hoi {this.props.auth.name}, je bent aangemeld!</Text>
+						<Text style={styles.footerText2}>De quiz gaat vanzelf van start...</Text>
+						<Loader style={styles.footerLoader} size='large'/>
+					</View>;
+					break;
+				case 'started':
+					footer = <View>
+						<Text style={styles.footerText}>Een moment geduld...</Text>
+						<Loader style={styles.footerLoader} size='large'/>
+					</View>;
+					break;
+				case 'finished':
+					footer = <View>
+						<Text style={styles.footerText}>Dat was het dan,{'\n'}de quiz is afgelopen.{'\n'}</Text>
+						<Text style={styles.footerText2}>Bedankt voor het meedoen!{'\n'}Binnenkort zal de App bijgewerkt worden en zullen de vragen en antwoorden hier zichtbaar zijn.</Text>
+						<View style={styles.footerLoader} />
+					</View>;
+					break;
+			}
+		} else if (this.props.quiz.status === 'finished') {
+			footer = <View>
+				<Text style={styles.footerText}>Hoi, de Quiz is reeds gespeeld.{'\n'}</Text>
+				<Text style={styles.footerText2}>Binnenkort zal de App bijgewerkt worden en zullen de vragen en antwoorden hier zichtbaar zijn.</Text>
+				<View style={styles.footerLoader} />
+			</View>;
+		} else {
+			const signingUp = (this.props.auth.status === 'signingUp');
+			const editable = (this.props.auth.status === 'loggedOut');
+			footer = <View style={styles.buttons} ref='buttons'>
+				<TextInput
+					style={[styles.name, !editable ? {opacity: 0.5} : undefined]}
+					ref='name'
+					editable={!signingUp}
+					placeholder='vul hier je naam in'
+					placeholderTextColor='rgba(255,255,255,0.5)'
+					autoCorrect={false}
+					onChangeText={(text) => this.setState({name: text})}
+					onFocus={this.onFocusTextInput}
+					onBlur={this.onBlurTextInput}
+				/>
+				<Button
+					disabled={!editable}
+					loading={signingUp}
+					text='Deelnemen'
+					onPress={() => this._onJoin()} 
+				/>
+			</View>;
 		}	
 		return <ScrollView 
 			style={styles.scrollView}

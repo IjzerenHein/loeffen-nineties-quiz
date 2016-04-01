@@ -9,9 +9,7 @@ import QuizActions from './quiz/actions';
 
 class AppView extends React.Component {
 	componentDidMount() {
-		AuthActions.init(store);/*.then(() => {
-			LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
-		});*/
+		AuthActions.init(store);
 		QuizActions.init(store);
 		store.subscribe(() => this._updateRoute(store.getState()));
 	}
@@ -24,33 +22,47 @@ class AppView extends React.Component {
 
 	renderScene(route, navigator) {
 		this.navigator = navigator;
-		this.route = route;
 
 		if (route.type === 'root') {
 			return <RootView />
 		} else if (route.type === 'question') {
-			return <QuestionView question={store.getState().quiz.activeQuestion}/>
+			const activeQuestion = store.getState().quiz.activeQuestion;
+			return <QuestionView question={(activeQuestion && (activeQuestion.id === route.question.id)) ? activeQuestion : route.question}/>
+		} else if (route.type === 'pleaseWait') {
+			return <RootView />
 		} else if (route.type === 'admin') {
 			return <AdminView />
+		}
+	}
+
+	_navigateTo(type, route) {
+		this.route = route;
+		switch (type) {
+			case 'reset': this.navigator.resetTo(route); break;
+			case 'push': this.navigator.push(route); break;
 		}
 	}
 
 	_updateRoute({auth, quiz}) {
 		if (auth.admin) {
 			if (!this.route || (this.route.type !== 'admin')) {
-				this.navigator.resetTo({type: 'admin'});
+				this._navigateTo('reset', {type: 'admin'});
 			}
 		}
-		else if ((auth.status === 'loggedIn') && (quiz.status === 'started') && quiz.activeQuestion) {
-			if (this.navigator && (!this.route || (this.route.type !== 'question') || (this.route.questionId !== quiz.activeQuestion.id))) {
-				this.navigator.push({type: 'question', questionId: quiz.activeQuestion.id});
-			}
-			else {
-				this.forceUpdate();
+		else if ((auth.status === 'loggedIn') && (quiz.status === 'started')) {
+			if (quiz.activeQuestion) {
+				if (this.navigator && (!this.route || (this.route.type !== 'question') || (this.route.question.id !== quiz.activeQuestion.id))) {
+					this._navigateTo('push', {type: 'question', question: quiz.activeQuestion});
+				}
+				else {
+					this.forceUpdate();
+				}
+			} else if (!this.route || (this.route.type !== 'pleaseWait')) {
+				this._navigateTo('reset', {type: 'pleaseWait'});
 			}
 		}
 		else if (!this.route || (this.route.type !== 'root')) {
-			this.navigator.resetTo({type: 'root'});
+			this._navigateTo('reset', {type: 'root'});
 		}
 	}
 }

@@ -16,10 +16,18 @@ const styles = StyleSheet.create({
 		backgroundColor: tinycolor(Theme.themeColor).setAlpha(0.5).toString(),
 		borderRadius: 8
 	},
-	textStyle: {
+	regularTextStyle: {
 		fontFamily: Theme.fontFamily,
 		fontSize: 26,
-		margin: 5
+		margin: 5,
+		textAlign: 'center'
+	},
+	voteTextStyle: {
+		fontFamily: Theme.fontFamily,
+		fontSize: 26,
+		margin: 5,
+		textAlign: 'left',
+		paddingLeft: 20
 	},
 	loader: {
 		marginTop: 8,
@@ -56,7 +64,7 @@ export default class Button extends React.Component {
 				animating={true} /> :
 			<ProgressText
 				style={styles[styleClass]}
-				textStyle={styles.textStyle}
+				textStyle={styles[styleClass + 'TextStyle']}
 				textColor={(styleClass === 'vote') ? Theme.lightColor : undefined}
 				progress={progress}>
 				{text}

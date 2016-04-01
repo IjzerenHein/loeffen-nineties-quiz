@@ -1,4 +1,11 @@
+const Status = {
+	NOT_STARTED: 'notStarted',
+	STARTED: 'started',
+	FINISHED: 'finished'
+};
+
 export default {
+	STATUS: Status,
 	SET_STATUS: 'QUIZ_SET_STATUS',
 	SET_QUESTION_IDS: 'QUIZ_SET_QUESTION_IDS',
 	SET_ACTIVE_QUESTION: 'QUIZ_SET_ACTIVE_QUESTION',
