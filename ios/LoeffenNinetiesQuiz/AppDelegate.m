@@ -15,7 +15,8 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-  for (NSString* family in [UIFont familyNames])
+  // Log all installed fonts
+  /*for (NSString* family in [UIFont familyNames])
   {
     NSLog(@"%@", family);
     
@@ -23,8 +24,7 @@
     {
       NSLog(@"  %@", name);
     }
-  }
-  
+  }*/
   
   NSURL *jsCodeLocation;
 
@@ -42,7 +42,11 @@
    * on the same Wi-Fi network.
    */
 
-  if (TARGET_OS_SIMULATOR) {
+  BOOL debug = false;
+#ifdef DEBUG
+  debug = true;
+#endif
+  if (TARGET_OS_SIMULATOR && debug) {
     //jsCodeLocation = [NSURL URLWithString:@"http://192.168.1.115:8081/index.ios.bundle?platform=ios&dev=true"];
     jsCodeLocation = [NSURL URLWithString:@"http://localhost:8081/index.ios.bundle?platform=ios&dev=true"];
   }
