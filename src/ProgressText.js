@@ -46,24 +46,31 @@ export default class ProgressText extends React.Component {
 			containerWidth: 0,
 			containerHeight: 0
 		};
+		this.animationState = {
+			fillWidth: 0
+		};
 		this._onMeasureContainer = (event) => this.onMeasureContainer(event);
 	}
 
 	render() {
 		const {textStyle, progress, children, textColor} = this.props;
-		LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
-
 		const {containerWidth, containerHeight} = this.state;
 		const fillWidth = containerWidth * progress;
 		const {color, backgroundColor, ...style} = StyleSheet.flatten(this.props.style);
 		//console.log('containerWidth: ', containerWidth, ', fillWidth: ', fillWidth, ', fillTextLeft: ', fillTextLeft, ', color: ', color, ', progress: ', progress);
+		if (fillWidth !== this.animationState.fillWidth) {
+			//console.log('anim ', this.animationState.fillWidth, ' -> ', fillWidth);
+			this.animationState.fillWidth = fillWidth;
+			LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);	
+		}
+		
 		return <View
 			style={[
 				style,
 				styles.container,
 				{backgroundColor: backgroundColor}]}
 			onLayout={this._onMeasureContainer}>
-			<View style={[styles.fill, {backgroundColor: color, width: fillWidth, height: containerHeight}]} />
+			<View style={[styles.fill, {backgroundColor: color, width: fillWidth, height: containerHeight, borderRadius: style.borderRadius}]} />
 			<Text style={[textStyle, {color: textColor || color}, styles.text]}>
 				{children}
 			</Text>

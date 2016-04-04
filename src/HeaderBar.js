@@ -1,4 +1,4 @@
-import React, {View, StyleSheet, Image} from 'react-native';
+import React, {View, StyleSheet, Image, Platform} from 'react-native';
 import Theme from './Theme';
 
 const styles = StyleSheet.create({
@@ -6,9 +6,14 @@ const styles = StyleSheet.create({
 		alignItems: 'center',
 		backgroundColor: Theme.themeColor,
 		flexDirection: 'row',
+		justifyContent: 'space-between'
+	},
+	toolBarIOS: {
 		height: 64,
-		justifyContent: 'space-between',
 		paddingTop: 20
+	},
+	toolBarAndroid: {
+		height: 44
 	},
 	title: {
 		resizeMode: 'contain',
@@ -28,7 +33,7 @@ const styles = StyleSheet.create({
 
 export default (props) => {
 	const {style, ...viewProps} = props;
-	return <View style={[style, styles.toolBar]} {...viewProps}>
+	return <View style={[style, styles.toolBar, (Platform.OS === 'ios') ? styles.toolBarIOS : styles.toolBarAndroid]} {...viewProps}>
 		<View style={styles.back} />
 		<Image style={styles.title} source={require('../assets/title.png')} />
 		<Image style={styles.logo} source={require('../assets/loeffen-wit.png')} />

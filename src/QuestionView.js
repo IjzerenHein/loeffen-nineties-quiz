@@ -17,10 +17,10 @@ const styles = StyleSheet.create({
 		fontFamily: Theme.fontFamily,
 		fontWeight: 'bold',
 		fontSize: 32,
-		paddingLeft: 40,
-		paddingRight: 30,
-		paddingTop: 10,
-		paddingBottom: 10,
+		marginLeft: 40,
+		marginRight: 30,
+		marginTop: 10,
+		marginBottom: 10,
 		textAlign: 'left'
 	},
 	'text.tablet': {
