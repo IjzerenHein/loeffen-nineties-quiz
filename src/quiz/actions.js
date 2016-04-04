@@ -23,48 +23,66 @@ export default class {
 		//
 		// quiz.activeQuestion
 		//
-		let questionId;
+		//let questionId;
 		const activeQuestionRef = new FirebaseSmartRef();
-		activeQuestionRef.on('value', (snapshot) => {
-			dispatch({
-				type: C.SET_ACTIVE_QUESTION,
-				id: questionId,
-				data: snapshot.val()
-			});
-		});
+		const myVoteRef = new FirebaseSmartRef();
+		const activeQuestionVotesRef = new FirebaseSmartRef();
 		quizRef.child('activeQuestionId').on('value', (snapshot) => {
-			questionId = snapshot.val();
-			if (questionId) {
-				activeQuestionRef.setRef(questionsRef.child(questionId));
-			}
-			else {
-				activeQuestionRef.setRef(undefined);
-				dispatch({
-					type: C.SET_ACTIVE_QUESTION,
-					id: undefined,
-					data: undefined
-				});
-			}
+			dispatch({
+				type: C.SET_ACTIVE_QUESTION_ID,
+				id: snapshot.val()
+			});
 		});
 
-		//
-		// quiz.activeQuestion.vote
-		//
-		const myVoteRef = new FirebaseSmartRef();
-		myVoteRef.on('value', (snapshot) => {
-			dispatch({
-				type: C.SET_ACTIVE_QUESTION_VOTE,
-				vote: snapshot.val()
+		monitor(store, ['quiz.activeQuestionId', 'auth.uid'], ({quiz, auth}) => { 
+			activeQuestionRef.onValue();
+			myVoteRef.onValue();
+			activeQuestionVotesRef.onValue();
+			activeQuestionRef.setRef(quiz.activeQuestionId ? questionsRef.child(quiz.activeQuestionId) : undefined);
+			myVoteRef.setRef((quiz.activeQuestionId && auth.uid) ? votesRef.child(quiz.activeQuestionId).child(auth.uid) : undefined);
+			activeQuestionVotesRef.setRef((quiz.activeQuestionId && auth.uid) ? votesRef.child(quiz.activeQuestionId) : undefined);
+			const activeQuestion = activeQuestionRef.onValue((snapshot) => {
+				return snapshot && dispatch({
+					type: C.UPDATE_ACTIVE_QUESTION,
+					id: snapshot.key(),
+					data: snapshot.val()
+				});
 			});
-		});
-		monitor(store, ['quiz.activeQuestion.id', 'auth.uid'], ({quiz, auth}) => {
-			myVoteRef.setRef((quiz.activeQuestion && auth.uid) ? votesRef.child(quiz.activeQuestion.id).child(auth.uid) : undefined);
+			const myVote = myVoteRef.onValue((snapshot) => {
+				return snapshot && dispatch({
+					type: C.UPDATE_ACTIVE_QUESTION,
+					id: quiz.activeQuestionId,
+					data: {
+						vote: snapshot.val()
+					}
+				});
+			});
+			const votes = activeQuestionVotesRef.onValue((snapshot) => {
+				return snapshot && dispatch({
+					type: C.UPDATE_ACTIVE_QUESTION,
+					id: quiz.activeQuestionId,
+					data: {
+						votes: snapshot.val()
+					}
+				});
+			});
+			Promise.all([activeQuestion, myVote, votes]).then(([activeQuestion, myVote, votes]) => {
+				return activeQuestion && myVote && dispatch({
+					type: C.SET_ACTIVE_QUESTION,
+					id: activeQuestion.key(),
+					data: {
+						...activeQuestion.val(),
+						vote: myVote.val(),
+						votes: votes.val()
+					}
+				});
+			});
 		});
 
 		//
 		// quiz.activeQuestion.votes
 		//
-		const activeQuestionVotesRef = new FirebaseSmartRef();
+		/*const activeQuestionVotesRef = new FirebaseSmartRef();
 		activeQuestionVotesRef.on('value', (snapshot) => {
 			dispatch({
 				type: C.SET_ACTIVE_QUESTION_VOTES,
@@ -73,7 +91,7 @@ export default class {
 		});
 		monitor(store, ['quiz.activeQuestion.id', 'auth.uid'], ({quiz, auth}) => {
 			activeQuestionVotesRef.setRef((quiz.activeQuestion && auth.uid) ? votesRef.child(quiz.activeQuestion.id) : undefined);
-		});
+		});*/
 
 		//
 		// quiz.onlineUserCount
