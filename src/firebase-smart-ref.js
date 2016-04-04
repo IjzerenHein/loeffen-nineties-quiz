@@ -37,6 +37,7 @@ export default class FirebaseSmartRef {
 		if (this.ref) {
 			this.ref.on(eventType, callback, cancelCallback, context);
 		}
+		return callback;
 	}
 
 	off(eventType, callback, context) {
@@ -50,5 +51,21 @@ export default class FirebaseSmartRef {
 		if (this.ref) {
 			this.ref.off(eventType, callback, context);
 		}	
+	}
+
+	onValue(callback) {
+		return new Promise((resolve) => {
+			if (this.onValueCallback) {
+				this.onValueResolve(undefined);
+				this.off('value', this.onValueCallback);
+				this.onValueCallback = undefined;
+				this.onValueResolve = undefined;
+			}
+			this.onValueResolve = resolve;
+			this.onValueCallback = this.on('value', (snapshot) => {
+				resolve(snapshot);
+				return callback ? callback(snapshot) : undefined;
+			});
+		});
 	}
 }
