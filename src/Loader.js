@@ -1,21 +1,21 @@
-import React, {Platform, ActivityIndicatorIOS, ProgressBarAndroid} from 'react-native';
+import React, {Platform, View, ActivityIndicatorIOS, ProgressBarAndroid} from 'react-native';
 
 export default (props) => {
-  const size = props.size || 'small';
+  const {size, ...otherProps} = props;
+  //style={{height: (size === 'large') ? 30 : 20}}
   if (Platform.OS === 'android') {
-    return (
-      <ProgressBarAndroid 
-        style={{height: (size === 'large') ? 30 : 20}}
-        styleAttr="Inverse"
-        {...props}
+    return <View {...otherProps}>
+      <ProgressBarAndroid
+        color="white"
+        styleAttr={size === 'large' ? 'Large' : 'Small'}
       />
-    );
+    </View>
   } else {
     return (
       <ActivityIndicatorIOS
         animating={true}
-        size={size}
-        {...props}
+        size={size === 'large' ? 'large' : 'small'}
+        {...otherProps}
       />
     );
   }
