@@ -1,4 +1,4 @@
-import React, {View, StyleSheet, Text, Image, TextInput, Alert, ScrollView, LayoutAnimation} from 'react-native';
+import React, {View, StyleSheet, Text, Image, TextInput, Alert, LayoutAnimation, DeviceEventEmitter} from 'react-native';
 import {connect} from 'react-redux';
 import Button from './Button';
 import Theme from './Theme';
@@ -6,15 +6,13 @@ import Loader from './Loader';
 import AuthActions from './auth/actions';
 
 const styles = StyleSheet.create({
-	scrollView: {
-		flex: 1,
+	main: {
 		backgroundColor: Theme.themeColor,
+		flex: 1,
+		flexDirection: 'column',
+		justifyContent: 'center',
 		paddingLeft: 20,
 		paddingRight: 20
-	},
-	main: {
-		flexDirection: 'column',
-		justifyContent: 'space-between'
 	},
 	footerText: {
 		color: Theme.lightColor,
@@ -30,23 +28,24 @@ const styles = StyleSheet.create({
 		color: Theme.lightColor,
 		fontFamily: Theme.fontFamily,
 		fontSize: 16,
-		textAlign: 'center'
+		textAlign: 'center',
+		marginTop: 20
 	},
 	imageView: {
 		flexDirection: 'row',
 		justifyContent: 'center',
-		height: 200
+		height: 200,
+		marginBottom: 40,
+		marginTop: 20
 	},
 	image: {
 		height: 200,
 		resizeMode: 'contain'
 	},
 	loader: {
-		padding: 20,
-		paddingBottom: 40
+		paddingTop: 20
 	},
 	buttons: {
-		paddingBottom: 20,
 		paddingTop: 20
 	},
 	name: {
@@ -69,20 +68,23 @@ class RootView extends React.Component {
 		super();
 		this.state = {
 			name: undefined,
-			viewHeight: 0
+			keyboardVisible: false
 		};
-		this.onFocusTextInput = this._onFocusTextInput.bind(this);
-		this.onBlurTextInput = this._onBlurTextInput.bind(this);
-		this.onMeasureHeight = this._onMeasureHeight.bind(this);
+	}
+
+	componentWillMount() {
+		this._keyboardWillShow = DeviceEventEmitter.addListener('keyboardWillShow', () => this.setState({keyboardVisible: true}));
+		this._keyboardWillHide = DeviceEventEmitter.addListener('keyboardWillHide', () => this.setState({keyboardVisible: false}));
+	}
+
+	componentWillUnmount() {
+		this._keyboardWillShow.remove();
+		this._keyboardWillHide.remove();
 	}
 
 	render() {
-		if (this._initLayoutAnimation) {
-			LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
-		}
-		this._initLayoutAnimation = this._initLayoutAnimation || (this.state.viewHeight > 0);
+		LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
 		let footer;
-		//console.log('auth: ', this.props.auth.status, ', quiz: ', this.props.quiz.status);
 		if ((this.props.quiz.status === 'launchScreen') || (this.props.quiz.status === 'notInitialized')) {
 			footer = <View />;
 		} else if (this.props.auth.status === 'loggingIn') {
@@ -104,7 +106,7 @@ class RootView extends React.Component {
 					break;
 				case 'finished':
 					footer = <View>
-						<Text style={styles.footerText}>Dat was het dan,{'\n'}de quiz is afgelopen.{'\n'}</Text>
+						<Text style={styles.footerText}>Dat was het dan,{'\n'}de quiz is afgelopen...</Text>
 						<Text style={styles.footerText2}>Bedankt voor het meedoen!{'\n'}Binnenkort zal de App bijgewerkt worden en zullen de vragen en antwoorden hier zichtbaar zijn.</Text>
 						<View style={styles.footerLoader} />
 					</View>;
@@ -112,7 +114,7 @@ class RootView extends React.Component {
 			}
 		} else if (this.props.quiz.status === 'finished') {
 			footer = <View>
-				<Text style={styles.footerText}>Hoi, de Quiz is reeds gespeeld.{'\n'}</Text>
+				<Text style={styles.footerText}>Hoi, de Quiz is reeds gespeeld.</Text>
 				<Text style={styles.footerText2}>Binnenkort zal de App bijgewerkt worden en zullen de vragen en antwoorden hier zichtbaar zijn.</Text>
 				<View style={styles.footerLoader} />
 			</View>;
@@ -128,8 +130,6 @@ class RootView extends React.Component {
 					placeholderTextColor='rgba(255,255,255,0.5)'
 					autoCorrect={false}
 					onChangeText={(text) => this.setState({name: text})}
-					onFocus={this.onFocusTextInput}
-					onBlur={this.onBlurTextInput}
 				/>
 				<Button
 					disabled={!editable}
@@ -139,19 +139,12 @@ class RootView extends React.Component {
 				/>
 			</View>;
 		}	
-		return <ScrollView 
-			style={styles.scrollView}
-			ref='scrollView'
-			keyboardDismissMode='interactive'
-			onLayout={this.onMeasureHeight}>
-			<View style={[styles.main, {height: this.state.viewHeight}]} >
-				<View />
-				<View style={styles.imageView}>
-					<Image style={styles.image} source={require('../assets/logo.png')} />
-				</View>
-				{footer}
+		return <View style={[styles.main, {paddingBottom: this.state.keyboardVisible ? 260 : 0}]} >
+			<View style={styles.imageView}>
+				<Image style={styles.image} source={require('../assets/logo.png')} />
 			</View>
-		</ScrollView>
+			{footer}
+		</View>
 	}
 
 	_onJoin() {
@@ -163,27 +156,6 @@ class RootView extends React.Component {
 			);
 		}
 		this.props.dispatch(AuthActions.signup(this.state.name));
-	}
-
-	_onMeasureHeight(event) {
-		this.setState({
-			viewHeight: event.nativeEvent.layout.height
-		});
-	}
-
-	_onFocusTextInput() {
-		setTimeout(() => {
-			let scrollResponder = this.refs.scrollView.getScrollResponder();
-			scrollResponder.scrollResponderScrollNativeHandleToKeyboard(
-				React.findNodeHandle(this.refs.buttons),
-				0,
-				true
-			);
-		}, 50);
-	}
-
-	_onBlurTextInput() {
-		this.refs.scrollView.scrollTo({y: 0});
 	}
 }
 export default connect((state) => {return {
