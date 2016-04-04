@@ -41,32 +41,34 @@ export default class {
 			activeQuestionRef.setRef(quiz.activeQuestionId ? questionsRef.child(quiz.activeQuestionId) : undefined);
 			myVoteRef.setRef((quiz.activeQuestionId && auth.uid) ? votesRef.child(quiz.activeQuestionId).child(auth.uid) : undefined);
 			activeQuestionVotesRef.setRef((quiz.activeQuestionId && auth.uid) ? votesRef.child(quiz.activeQuestionId) : undefined);
-			const activeQuestion = activeQuestionRef.onValue((snapshot) => {
-				return snapshot && dispatch({
-					type: C.UPDATE_ACTIVE_QUESTION,
-					id: snapshot.key(),
-					data: snapshot.val()
-				});
-			});
-			const myVote = myVoteRef.onValue((snapshot) => {
-				return snapshot && dispatch({
-					type: C.UPDATE_ACTIVE_QUESTION,
-					id: quiz.activeQuestionId,
-					data: {
-						vote: snapshot.val()
-					}
-				});
-			});
-			const votes = activeQuestionVotesRef.onValue((snapshot) => {
-				return snapshot && dispatch({
-					type: C.UPDATE_ACTIVE_QUESTION,
-					id: quiz.activeQuestionId,
-					data: {
-						votes: snapshot.val()
-					}
-				});
-			});
-			Promise.all([activeQuestion, myVote, votes]).then(([activeQuestion, myVote, votes]) => {
+			const promises = [
+				activeQuestionRef.onValue((snapshot) => {
+					return snapshot && dispatch({
+						type: C.UPDATE_ACTIVE_QUESTION,
+						id: snapshot.key(),
+						data: snapshot.val()
+					});
+				}),
+				myVoteRef.onValue((snapshot) => {
+					return snapshot && dispatch({
+						type: C.UPDATE_ACTIVE_QUESTION,
+						id: quiz.activeQuestionId,
+						data: {
+							vote: snapshot.val()
+						}
+					});
+				}),
+				activeQuestionVotesRef.onValue((snapshot) => {
+					return snapshot && dispatch({
+						type: C.UPDATE_ACTIVE_QUESTION,
+						id: quiz.activeQuestionId,
+						data: {
+							votes: snapshot.val()
+						}
+					});
+				})
+			];
+			Promise.all(promises).then(([activeQuestion, myVote, votes]) => {
 				return activeQuestion && myVote && dispatch({
 					type: C.SET_ACTIVE_QUESTION,
 					id: activeQuestion.key(),
