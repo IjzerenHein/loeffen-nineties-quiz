@@ -42,7 +42,7 @@ let StartView = (props) => {
 		<Button
 			style={styles.startButton}
 			text='Start de Quiz'
-			progress={1}
+			progress={0}
 			onPress={() => props.dispatch(QuizActions.start())} />
 	</View>
 };

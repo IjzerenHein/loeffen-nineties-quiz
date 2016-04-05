@@ -24,7 +24,7 @@ export default (state = {
                 ...action.data,
                 id: action.id
             } : undefined;
-            console.log('setting active question: ', activeQuestion);
+            //console.log('setting active question: ', activeQuestion);
             return Object.assign({}, state, {activeQuestion});
         case C.UPDATE_ACTIVE_QUESTION:
             if (state.activeQuestion && (state.activeQuestion.id === action.id)) {
@@ -32,25 +32,10 @@ export default (state = {
                     ...action.data,
                     id: action.id
                 }) : undefined;
-                console.log('updating active question: ', activeQuestion);
+                //console.log('updating active question: ', activeQuestion);
                 return Object.assign({}, state, {activeQuestion});
-            } else {
-                return state;
             }
-        /*case C.SET_ACTIVE_QUESTION_VOTE:
-            return Object.assign({}, state, {
-                activeQuestion: {
-                    ...state.activeQuestion,
-                    vote: action.vote
-                }
-            });
-        case C.SET_ACTIVE_QUESTION_VOTES:
-            return Object.assign({}, state, {
-                activeQuestion: {
-                    ...state.activeQuestion,
-                    votes: action.votes
-                }
-            });*/
+            return state;
         case C.SET_ONLINE_USERS_COUNT:
             return Object.assign({}, state, {
                 onlineUserCount: action.count

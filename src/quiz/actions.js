@@ -162,6 +162,24 @@ export default class {
 		}
 	}
 
+	static closeQuestion() {
+		return function(dispatch, getState) {
+			const quiz = getState().quiz;
+			const questionId = quiz.activeQuestion.id;
+			questionsRef.child(questionId).child('status').set('closed');
+		}
+	}
+
+	static reopenQuestion() {
+		return function(dispatch, getState) {
+			const quiz = getState().quiz;
+			const questionId = quiz.activeQuestion.id;
+			questionsRef.child(questionId).child('status').set('open');
+			questionsRef.child(questionId).child('resultsVisible').set(false);
+			questionsRef.child(questionId).child('answerVisible').set(false);
+		}
+	}
+
 	static showResults(show) {
 		return function(dispatch, getState) {
 			const quiz = getState().quiz;

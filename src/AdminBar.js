@@ -16,7 +16,7 @@ const styles = StyleSheet.create({
 		resizeMode: 'contain'
 	},
 	title: {
-		width: 260,
+		width: 300,
 		resizeMode: 'contain'
 	},
 	buttons: {
@@ -45,6 +45,7 @@ const AdminBar = (props) => {
 	const {style, quiz, dispatch,...viewProps} = props;
 	const prevEnabled = (quiz.status === 'started') && quiz.activeQuestion && (quiz.questionIds.indexOf(quiz.activeQuestion.id) > 0);
 	const nextEnabled = (quiz.status === 'started') && quiz.activeQuestion && (quiz.questionIds.indexOf(quiz.activeQuestion.id) < (quiz.questionIds.length - 1));
+	const questionOpen = (quiz.status === 'started') && quiz.activeQuestion && (quiz.activeQuestion.status === 'open');
 	return <View style={[style, styles.main]} {...viewProps}>
 		<Image style={styles.logo} source={require('../assets/loeffen-wit.png')} />
 		<Image style={styles.title} source={require('../assets/title.png')} />
@@ -54,8 +55,9 @@ const AdminBar = (props) => {
 				disabled={!prevEnabled}
 				onPress={() => dispatch(QuizActions.previousQuestion())}/>
 			<TextButton
-				text='sluit stemronde'
+				text={questionOpen ? 'sluit stemronde' : 'heropen stemronde'}
 				disabled={quiz.status === 'notStarted'}
+				onPress={() => dispatch(questionOpen ? QuizActions.closeQuestion() : QuizActions.reopenQuestion())}
 				/>
 			<TextButton
 				text='volgende'

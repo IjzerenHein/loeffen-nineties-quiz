@@ -3,6 +3,8 @@ import {AsyncStorage} from 'react-native';
 import Firebase from 'firebase';
 import FirebaseSmartRef from '../firebase-smart-ref';
 
+//AsyncStorage.clear();
+
 const ref = new Firebase('https://loeffen-reunie-quiz.firebaseio.com');
 
 export default class {
