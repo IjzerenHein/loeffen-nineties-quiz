@@ -1,7 +1,8 @@
-import React, {StyleSheet, TouchableOpacity, ActivityIndicatorIOS, PropTypes} from 'react-native';
+import React, {StyleSheet, TouchableOpacity, PropTypes} from 'react-native';
 import tinycolor from 'tinycolor2';
 import Theme from './Theme';
 import ProgressText from './ProgressText';
+import Loader from './Loader';
 
 const styles = StyleSheet.create({
 	regular: {
@@ -59,9 +60,7 @@ export default class Button extends React.Component {
 	render() {
 		const {disabled, text, style, styleClass, progress, onPress, ...props} = this.props;
 		const content = this.props.loading ?
-			<ActivityIndicatorIOS
-				style={styles.loader}
-				animating={true} /> :
+			<Loader style={styles.loader} /> :
 			<ProgressText
 				style={styles[styleClass]}
 				textStyle={styles[styleClass + 'TextStyle']}

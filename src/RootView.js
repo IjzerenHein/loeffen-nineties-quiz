@@ -49,7 +49,6 @@ const styles = StyleSheet.create({
 		paddingTop: 20
 	},
 	name: {
-		backgroundColor: Theme.themeColor,
 		borderRadius: 8,
 		borderWidth: 2,
 		borderStyle: 'solid',
@@ -85,22 +84,17 @@ class RootView extends React.Component {
 	render() {
 		LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
 		let footer;
-		if ((this.props.quiz.status === 'launchScreen') || (this.props.quiz.status === 'notInitialized')) {
+		if (this.props.quiz.status === 'launchScreen') {
 			footer = <View />;
-		} else if (this.props.auth.status === 'loggingIn') {
+		} else if ((this.props.auth.status === 'loggingIn') || (this.props.quiz.status === 'notInitialized')) {
 			footer = <Loader style={styles.loader} size='large'/>;
 		} else if (this.props.auth.status === 'loggedIn') {
 			switch (this.props.quiz.status) {
 				case 'notStarted':
+				case 'started':
 					footer = <View>
 						<Text style={styles.footerText}>Hoi {this.props.auth.name}, je bent aangemeld!</Text>
 						<Text style={styles.footerText2}>De quiz gaat vanzelf van start...</Text>
-						<Loader style={styles.footerLoader} size='large'/>
-					</View>;
-					break;
-				case 'started':
-					footer = <View>
-						<Text style={styles.footerText}>Een moment geduld...</Text>
 						<Loader style={styles.footerLoader} size='large'/>
 					</View>;
 					break;
@@ -129,6 +123,7 @@ class RootView extends React.Component {
 					placeholder='vul hier je naam in'
 					placeholderTextColor='rgba(255,255,255,0.5)'
 					autoCorrect={false}
+					underlineColorAndroid='white'
 					onChangeText={(text) => this.setState({name: text})}
 				/>
 				<Button
