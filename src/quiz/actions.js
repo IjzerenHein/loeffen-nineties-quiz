@@ -7,6 +7,7 @@ const ref = new Firebase('https://loeffen-reunie-quiz.firebaseio.com');
 const quizRef = ref.child('quiz');
 const questionsRef = ref.child('questions');
 const votesRef = ref.child('votes');
+const usersRef = ref.child('users');
 
 export default class {
 	static init(store) {
@@ -15,15 +16,77 @@ export default class {
 		//
 		// quiz.state
 		//
-		quizRef.child('status').on('value', (snapshot) => dispatch({
-			type: C.SET_STATUS,
-			status: snapshot.val()
-		}));
+		const result = {
+			questions: new FirebaseSmartRef(),
+			votes: new FirebaseSmartRef(),
+			users: new FirebaseSmartRef()
+		};
+		quizRef.child('status').on('value', (snapshot) => {
+			const status = snapshot.val();
+			dispatch({
+				type: C.SET_STATUS,
+				status: status
+			});
+			
+			// when finished, update end results
+			if (status === 'finished') {
+				result.questions.setRef(questionsRef);
+				result.votes.setRef(votesRef);
+				result.users.setRef(usersRef);
+				Promise.all([
+					result.questions.onValue(),
+					result.votes.onValue(),
+					result.users.onValue()
+					]).then(([questions, votes, users]) => {
+					users = users.val();
+					questions = questions.val();
+					votes = votes.val();
+					const questionIds = Object.keys(questions);
+					const uids = Object.keys(users);
+					const results = [];
+					for (let i = 0; i < uids.length; i++) {
+						const uid = uids[i];
+						if (!users[uid].admin) {
+							let totalQuestions = 0;
+							let totalQuestionsWithAnswer = 0;
+							let totalAnswered = 0;
+							let totalAnsweredCorrect = 0;
+							for (let j = 0; j < questionIds.length; j++) {
+								const question = questions[questionIds[j]];
+								totalQuestions++;
+								totalQuestionsWithAnswer += question.answer ? 1 : 0;
+								const answer = votes[questionIds[j]][uid];
+								totalAnswered += (answer ? 1 : 0);
+								totalAnsweredCorrect += (question.answer && answer && (answer === question.answer)) ? 1 : 0;
+							}
+							results.push({
+								uid: uids[i],
+								name: users[uid].name,
+								totalQuestions,
+								totalQuestionsWithAnswer,
+								totalAnswered,
+								totalAnsweredCorrect
+							});
+						}
+					}
+					results.sort((a, b) => a.totalAnsweredCorrect < b.totalAnsweredCorrect);
+					dispatch({
+						type: C.SET_RESULTS,
+						results: results
+					});
+					result.questions.onValue();
+					result.votes.onValue();
+					result.users.onValue();
+					result.questions.setRef(undefined);
+					result.votes.setRef(undefined);
+					result.users.setRef(undefined);
+				});	
+			}
+		});
 
 		//
 		// quiz.activeQuestion
 		//
-		//let questionId;
 		const activeQuestionRef = new FirebaseSmartRef();
 		const myVoteRef = new FirebaseSmartRef();
 		const activeQuestionVotesRef = new FirebaseSmartRef();
@@ -33,7 +96,6 @@ export default class {
 				id: snapshot.val()
 			});
 		});
-
 		monitor(store, ['quiz.activeQuestionId', 'auth.uid'], ({quiz, auth}) => { 
 			activeQuestionRef.onValue();
 			myVoteRef.onValue();
@@ -82,20 +144,6 @@ export default class {
 		});
 
 		//
-		// quiz.activeQuestion.votes
-		//
-		/*const activeQuestionVotesRef = new FirebaseSmartRef();
-		activeQuestionVotesRef.on('value', (snapshot) => {
-			dispatch({
-				type: C.SET_ACTIVE_QUESTION_VOTES,
-				votes: snapshot.val()
-			});
-		});
-		monitor(store, ['quiz.activeQuestion.id', 'auth.uid'], ({quiz, auth}) => {
-			activeQuestionVotesRef.setRef((quiz.activeQuestion && auth.uid) ? votesRef.child(quiz.activeQuestion.id) : undefined);
-		});*/
-
-		//
 		// quiz.onlineUserCount
 		//
 		let onlineUsersCount = 0;
@@ -141,6 +189,12 @@ export default class {
 	static start() {
 		return function() {
 			quizRef.child('status').set('started');
+		}
+	}
+
+	static finish() {
+		return function() {
+			quizRef.child('status').set('finished');
 		}
 	}
 

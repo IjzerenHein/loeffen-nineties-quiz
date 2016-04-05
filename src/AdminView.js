@@ -5,6 +5,7 @@ import AdminBar from './AdminBar';
 import Button from './Button';
 import QuizActions from './quiz/actions';
 import AdminQuestionView from './AdminQuestionView';
+import ResultsView from './ResultsView';
 
 const styles = StyleSheet.create({
 	main: {
@@ -55,8 +56,9 @@ class AdminView extends React.Component {
 		//console.log('status, ', quiz);
 		if ((quiz.status === 'started') && quiz.activeQuestion) {
 			content = <AdminQuestionView style={styles.content} />;
-		}
-		else {
+		} else if ((quiz.status === 'finished') && quiz.activeQuestion) {
+			content = <ResultsView style={styles.content} />;
+		} else {
 			content = <StartView style={styles.content} />;
 		}
 		return <View style={[style, styles.main]} {...props}>

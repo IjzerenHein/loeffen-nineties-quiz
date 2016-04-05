@@ -4,7 +4,8 @@ export default (state = {
     status: 'notInitialized',
     activeQuestion: undefined,
     onlineUserCount: 0,
-    questionIds: []
+    questionIds: [],
+    results: []
 }, action) => {
 	switch (action.type) {
 		case C.SET_STATUS:
@@ -39,6 +40,10 @@ export default (state = {
         case C.SET_ONLINE_USERS_COUNT:
             return Object.assign({}, state, {
                 onlineUserCount: action.count
+            });
+        case C.SET_RESULTS:
+            return Object.assign({}, state, {
+                results: action.results
             });
 		default:
 			return state;
