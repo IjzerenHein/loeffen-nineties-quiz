@@ -96,13 +96,13 @@ export default class {
 				id: snapshot.val()
 			});
 		});
-		monitor(store, ['quiz.activeQuestionId', 'auth.uid'], ({quiz, auth}) => { 
+		monitor(store, ['quiz.activeQuestionId', 'auth.uid', 'auth.admin'], ({quiz, auth}) => { 
 			activeQuestionRef.onValue();
 			myVoteRef.onValue();
 			activeQuestionVotesRef.onValue();
 			activeQuestionRef.setRef(quiz.activeQuestionId ? questionsRef.child(quiz.activeQuestionId) : undefined);
 			myVoteRef.setRef((quiz.activeQuestionId && auth.uid) ? votesRef.child(quiz.activeQuestionId).child(auth.uid) : undefined);
-			activeQuestionVotesRef.setRef((quiz.activeQuestionId && auth.uid) ? votesRef.child(quiz.activeQuestionId) : undefined);
+			activeQuestionVotesRef.setRef((quiz.activeQuestionId && auth.uid && auth.admin) ? votesRef.child(quiz.activeQuestionId) : undefined);
 			const promises = [
 				activeQuestionRef.onValue((snapshot) => {
 					return snapshot && dispatch({
@@ -137,17 +137,17 @@ export default class {
 					data: {
 						...activeQuestion.val(),
 						vote: myVote.val(),
-						votes: votes.val()
+						votes: votes ? votes.val() : {}
 					}
 				});
 			});
 		});
 
 		//
-		// quiz.onlineUserCount
+		// quiz.onlineUserCount (admins only)
 		//
 		let onlineUsersCount = 0;
-		const onlineUsersRef = ref.child('users').orderByChild('online').equalTo(true);
+		const onlineUsersRef = new FirebaseSmartRef();
 		onlineUsersRef.on('child_added', () => {
 			onlineUsersCount++;
 			dispatch({
@@ -162,11 +162,26 @@ export default class {
 				count: onlineUsersCount
 			});
 		});
+		monitor(store, ['auth.admin'], ({auth}) => { 
+			if (!auth.admin) {
+				onlineUsersRef.setRef(undefined);
+				onlineUsersCount = 0;
+				dispatch({
+					type: C.SET_ONLINE_USERS_COUNT,
+					count: onlineUsersCount
+				});
+			}
+			else {
+				onlineUsersCount = 0;
+				onlineUsersRef.setRef(ref.child('users').orderByChild('online').equalTo(true));
+			}
+		});
 
 		//
-		// quiz.questionIds
+		// quiz.questionIds (admins only)
 		//
-		questionsRef.on('value', (snapshot) => {
+		const adminQuestionsRef = new FirebaseSmartRef();
+		adminQuestionsRef.on('value', (snapshot) => {
 			const ids = [];
 			snapshot.forEach((questionSnapshot) => {
 				ids.push(questionSnapshot.key());
@@ -175,6 +190,18 @@ export default class {
 				type: C.SET_QUESTION_IDS,
 				questionIds: ids
 			});
+		});
+		monitor(store, ['auth.admin'], ({auth}) => {
+			if (!auth.admin) {
+				adminQuestionsRef.setRef(undefined);
+				dispatch({
+					type: C.SET_QUESTION_IDS,
+					questionIds: []
+				});
+			}
+			else {
+				adminQuestionsRef.setRef(questionsRef);
+			}
 		});
 	}
 

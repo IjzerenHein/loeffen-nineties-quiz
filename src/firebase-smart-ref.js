@@ -66,6 +66,7 @@ export default class FirebaseSmartRef {
 				resolve(snapshot);
 				return callback ? callback(snapshot) : undefined;
 			});
+			return !this.ref ? resolve(undefined) : undefined;
 		});
 	}
 }
