@@ -7,12 +7,30 @@
 		}
 	},
 	"vraag2": {
-		"text": "Hoe heette de Marokkaan die destijds in het busje rond reed?",
+		"text": "Hoeveel broer/zus combinaties werkten er in de jaren 90?",
 		"options": {
-			"mohammed": "Mohammed",
-			"abdul": "Abdul",
-			"chris": "Chris"
+			"5": "5",
+			"7": "7",
+			"8": "9"
 		},
-		"answer": "mohammed"
+		"answer": "7"
+	},
+	"vraag3": {
+		"text": "In welk jaar zijn Menno en Ingrid getrouwd?",
+		"options": {
+			"1993": "1993",
+			"1994": "1994",
+			"1995": "1995"
+		},
+		"answer": "1993"
+	},
+	"vraag4": {
+		"text": "Wat is het meest verkochte gebakje van de Loef?",
+		"options": {
+			"tompoes": "Tompoes",
+			"bosschebol": "Bossche Bol",
+			"vruch": "Vruchten gebak"
+		},
+		"answer": "tompoes"
 	}
 }
