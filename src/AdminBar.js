@@ -55,7 +55,7 @@ const AdminBar = (props) => {
 	const prevEnabled = (quiz.status !== 'notStarted') && question && (quiz.questionIds.indexOf(quiz.activeQuestion.id) > 0);
 	const nextEnabled = (quiz.status === 'started') && question && (question.status === 'closed') && (quiz.questionIds.indexOf(quiz.activeQuestion.id) < (quiz.questionIds.length - 1));
 	const resultsEnabled = (quiz.status === 'started') && question && (question.status === 'closed') && (quiz.questionIds.indexOf(quiz.activeQuestion.id) === (quiz.questionIds.length - 1));
-	const questionOpen = (quiz.status === 'started') && question && (quiz.activeQuestion.status === 'open');
+	const questionOpen = (quiz.status === 'started') && question && (quiz.activeQuestion.status !== 'closed');
 	return <View style={[style, styles.main]} {...viewProps}>
 		<Image style={styles.logo} source={require('../assets/loeffen-wit.png')} />
 		<Image style={styles.title} source={require('../assets/title.png')} />
