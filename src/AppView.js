@@ -1,5 +1,6 @@
 import React, {Navigator} from 'react-native';
 import {Provider} from 'react-redux';
+import monitor from './redux-monitor';
 import RootView from './RootView';
 import QuestionView from './QuestionView';
 import AdminView from './AdminView';
@@ -11,7 +12,7 @@ class AppView extends React.Component {
 	componentDidMount() {
 		AuthActions.init(store);
 		QuizActions.init(store);
-		store.subscribe(() => this._updateRoute(store.getState()));
+		monitor(store, ['auth.status', 'auth.admin', 'quiz.activeQuestion'], (state) => this._updateRoute(state));
 	}
 
 	render() {
@@ -28,8 +29,6 @@ class AppView extends React.Component {
 		} else if (route.type === 'question') {
 			const activeQuestion = store.getState().quiz.activeQuestion;
 			return <QuestionView question={(activeQuestion && (activeQuestion.id === route.question.id)) ? activeQuestion : route.question}/>
-		} else if (route.type === 'pleaseWait') {
-			return <RootView />
 		} else if (route.type === 'admin') {
 			return <AdminView />
 		}
@@ -49,16 +48,12 @@ class AppView extends React.Component {
 				this._navigateTo('reset', {type: 'admin'});
 			}
 		}
-		else if ((auth.status === 'loggedIn') && (quiz.status === 'started')) {
-			if (quiz.activeQuestion) {
-				if (this.navigator && (!this.route || (this.route.type !== 'question') || (this.route.question.id !== quiz.activeQuestion.id))) {
-					this._navigateTo('push', {type: 'question', question: quiz.activeQuestion});
-				}
-				else {
-					this.forceUpdate();
-				}
-			} else if (!this.route || (this.route.type !== 'pleaseWait')) {
-				this._navigateTo('reset', {type: 'pleaseWait'});
+		else if ((auth.status === 'loggedIn') && (quiz.status === 'started') && quiz.activeQuestion) {
+			if (this.navigator && (!this.route || (this.route.type !== 'question') || (this.route.question.id !== quiz.activeQuestion.id))) {
+				this._navigateTo('push', {type: 'question', question: quiz.activeQuestion});
+			}
+			else {
+				this.forceUpdate();
 			}
 		}
 		else if (!this.route || (this.route.type !== 'root')) {

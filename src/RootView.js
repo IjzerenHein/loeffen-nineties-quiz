@@ -35,7 +35,7 @@ const styles = StyleSheet.create({
 		flexDirection: 'row',
 		justifyContent: 'center',
 		height: 200,
-		marginBottom: 40,
+		marginBottom: 20,
 		marginTop: 20
 	},
 	image: {
@@ -84,9 +84,9 @@ class RootView extends React.Component {
 	render() {
 		LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
 		let footer;
-		if (this.props.quiz.status === 'launchScreen') {
+		if ((this.props.quiz.status === 'launchScreen') || (this.props.quiz.status === 'notInitialized')) {
 			footer = <View />;
-		} else if ((this.props.auth.status === 'loggingIn') || (this.props.quiz.status === 'notInitialized')) {
+		} else if (this.props.auth.status === 'loggingIn') {
 			footer = <Loader style={styles.loader} size='large'/>;
 		} else if (this.props.auth.status === 'loggedIn') {
 			switch (this.props.quiz.status) {

@@ -13,10 +13,10 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="logo.png" translatesAutoresizingMaskIntoConstraints="NO" id="j4x-RC-tIw">
-                    <rect key="frame" x="140" y="157" width="200" height="165"/>
+                    <rect key="frame" x="119" y="140" width="242" height="200"/>
                     <constraints>
                         <constraint firstAttribute="width" secondItem="j4x-RC-tIw" secondAttribute="height" multiplier="289:239" id="2ce-rS-AKc"/>
-                        <constraint firstAttribute="width" constant="200" id="Y3R-eP-pUL"/>
+                        <constraint firstAttribute="height" constant="200" id="R4g-qS-Ytl"/>
                     </constraints>
                 </imageView>
             </subviews>

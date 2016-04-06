@@ -73,6 +73,14 @@
   rootViewController.view = rootView;
   self.window.rootViewController = rootViewController;
   [self.window makeKeyAndVisible];
+  
+  //<Make sure launch screen transitions to app-view without white flash>
+  UIView *loading = [[[NSBundle mainBundle] loadNibNamed:@"LaunchScreen" owner:self options:nil] objectAtIndex:0];
+  loading.frame = self.window.bounds;
+  rootView.loadingView = loading;
+  rootView.loadingViewFadeDelay = 1;
+  //</Make sure launch screen transitions to app-view without white flash>
+  
   return YES;
 }
 
