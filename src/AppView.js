@@ -12,7 +12,7 @@ class AppView extends React.Component {
 	componentDidMount() {
 		AuthActions.init(store);
 		QuizActions.init(store);
-		monitor(store, ['auth.status', 'auth.admin', 'auth.name', 'quiz.activeQuestion'], (state) => this._updateRoute(state));
+		monitor(store, ['auth.status', 'auth.admin', 'auth.name', 'quiz.status', 'quiz.activeQuestion'], (state) => this._updateRoute(state));
 	}
 
 	render() {
