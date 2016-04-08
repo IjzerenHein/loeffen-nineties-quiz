@@ -9,13 +9,6 @@
 		"answer": "compleet"
 	},
 	"vraag02": {
-		"text": "Heb je wel eens meer uren ingevuld dan je daadwerkelijk gewerkt hebt?",
-		"options": {
-			"ja": "Ja",
-			"nee": "Nee"
-		}
-	},
-	"vraag03": {
 		"text": "In welk jaar zijn Menno en Ingrid getrouwd?",
 		"options": {
 			"1993": "1993",
@@ -24,7 +17,7 @@
 		},
 		"answer": "1993"
 	},
-	"vraag04": {
+	"vraag03": {
 		"text": "Wat is het meest verkochte gebakje van de Loef?",
 		"options": {
 			"tompouce": "Tompouce",
@@ -33,7 +26,23 @@
 		},
 		"answer": "tompouce"
 	},
+	"vraag04": {
+		"text": "Heb je wel eens meer uren ingevuld dan je daadwerkelijk gewerkt hebt?",
+		"options": {
+			"ja": "Ja",
+			"nee": "Nee"
+		}
+	},
 	"vraag05": {
+		"text": "Hoeveel procent van de aanwezigen heeft wel eens een uurtje te veel ingevuld?",
+		"options": {
+			"20%": "20 %",
+			"30%": "30 %",
+			"40%": "40 %"
+		},
+		"answer": "30%"
+	},
+	"vraag06": {
 		"text": "Welke hoort er niet in dit rijtje thuis?",
 		"options": {
 			"lekkerland": "Lekkerland",
@@ -43,7 +52,7 @@
 		},
 		"answer": "marietjefranken"
 	},
-	"vraag06": {
+	"vraag07": {
 		"text": "Hoe heette de goedlachse Marokaanse medewerker die altijd met een grote Renault bus naar de Loef kwam?",
 		"options": {
 			"ali": "Ali",
@@ -52,7 +61,7 @@
 		},
 		"answer": "abdul"
 	},
-	"vraag07": {
+	"vraag08": {
 		"text": "Wat was het kerstpakket in 1994?",
 		"options": {
 			"50gulden": "50 Gulden",
@@ -61,7 +70,7 @@
 		},
 		"answer": "badhanddoek"
 	},
-	"vraag08": {
+	"vraag09": {
 		"text": "Hoeveel uur was de Loef open ge-opend in begin jaren 90?",
 		"options": {
 			"56": "56",
@@ -70,7 +79,7 @@
 		},
 		"answer": "56"
 	},
-	"vraag09": {
+	"vraag10": {
 		"text": "Hoeveel broer/zus combinaties werkten er in de jaren 90?",
 		"options": {
 			"6": "6",
@@ -78,7 +87,7 @@
 			"meer": "meer"
 		}
 	},
-	"vraag10": {
+	"vraag11": {
 		"text": "Wat verdiende een 16-jarige medio jaren 90?",
 		"options": {
 			"4,25": "4,25 Gulden",
@@ -87,7 +96,7 @@
 		},
 		"answer": "4,25"
 	},
-	"vraag11": {
+	"vraag12": {
 		"text": "In welke volgorde zijn de kinderen van Menno en Ingrid geboren?",
 		"options": {
 			"laura,romy,britt": "Laura, Romy, Britt",
@@ -96,7 +105,7 @@
 		},
 		"answer": "laura,romy,britt"
 	},
-	"vraag12": {
+	"vraag13": {
 		"text": "Waarin uitte zich de vooruitstreven-heid van de Loef?",
 		"options": {
 			"euros": "In 1999 al betalen met euros",
@@ -105,7 +114,7 @@
 		},
 		"answer": "doorwerken"
 	},
-	"vraag13": {
+	"vraag14": {
 		"text": "Hoe heette de tante van Menno die elke zaterdag-middag kwam schoonmaken?",
 		"options": {
 			"riekie": "Tante Riekie",
@@ -113,15 +122,6 @@
 			"driekie": "Tante Driekie"
 		},
 		"answer": "riekske"
-	},
-	"vraag14": {
-		"text": "Wat was de bijnaam van John van Zweden?",
-		"options": {
-			"lul": "Lul",
-			"dirigent": "De dirigent",
-			"pik": "Pik"
-		},
-		"answer": "pik"
 	},
 	"vraag15": {
 		"text": "Waar vierden Annie en Wim hun 45-jarig huwelijk?",
@@ -133,12 +133,12 @@
 		"answer": "alverna"
 	},
 	"vraag16": {
-		"text": "Hoeveel procent van de aanwezigen heeft wel eens een uurtje te veel ingevuld?",
+		"text": "Wat was de bijnaam van John van Zweden?",
 		"options": {
-			"20%": "20 %",
-			"30%": "30 %",
-			"40%": "40 %"
+			"lul": "Lul",
+			"dirigent": "De dirigent",
+			"pik": "Pik"
 		},
-		"answer": "30%"
+		"answer": "pik"
 	}
 }
