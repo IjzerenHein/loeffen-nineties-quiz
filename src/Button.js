@@ -25,7 +25,7 @@ const styles = StyleSheet.create({
 	},
 	voteTextStyle: {
 		fontFamily: Theme.fontFamily,
-		fontSize: 26,
+		fontSize: Theme.fontSize,
 		margin: 5,
 		textAlign: 'left',
 		marginLeft: 20

@@ -63,10 +63,10 @@ export default class FirebaseSmartRef {
 			}
 			this.onValueResolve = resolve;
 			this.onValueCallback = this.on('value', (snapshot) => {
-				resolve(snapshot);
+				resolve({snapshot});
 				return callback ? callback(snapshot) : undefined;
 			});
-			return !this.ref ? resolve(undefined) : undefined;
+			return !this.ref ? resolve({}) : undefined;
 		});
 	}
 }

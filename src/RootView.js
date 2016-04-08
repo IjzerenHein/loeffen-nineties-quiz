@@ -106,12 +106,6 @@ class RootView extends React.Component {
 					</View>;
 					break;
 			}
-		} else if (this.props.quiz.status === 'finished') {
-			footer = <View>
-				<Text style={styles.footerText}>Hoi, de Quiz is reeds gespeeld.</Text>
-				<Text style={styles.footerText2}>Binnenkort zal de App bijgewerkt worden en zullen de vragen en antwoorden hier zichtbaar zijn.</Text>
-				<View style={styles.footerLoader} />
-			</View>;
 		} else {
 			const signingUp = (this.props.auth.status === 'signingUp');
 			const editable = (this.props.auth.status === 'loggedOut');

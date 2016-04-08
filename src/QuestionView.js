@@ -16,7 +16,7 @@ const styles = StyleSheet.create({
 		color: Theme.themeColor,
 		fontFamily: Theme.fontFamily,
 		fontWeight: 'bold',
-		fontSize: 28,
+		fontSize: Theme.fontSize,
 		marginLeft: 40,
 		marginRight: 30,
 		marginTop: 10,

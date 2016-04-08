@@ -3,6 +3,9 @@ import C from './constants';
 export default (state = {
     status: 'notInitialized',
     activeQuestion: undefined,
+    activeQuestionId: undefined,
+    localActiveQuestionId: undefined,
+    remoteActiveQuestionId: undefined,
     onlineUserCount: 0,
     questionIds: [],
     results: []
@@ -10,15 +13,25 @@ export default (state = {
 	switch (action.type) {
 		case C.SET_STATUS:
             return Object.assign({}, state, {
-                status: action.status
+                status: action.status,
+                activeQuestionId: (action.status === 'finished') ? state.localActiveQuestionId : state.remoteActiveQuestionId
             });
         case C.SET_QUESTION_IDS:
+            const localActiveQuestionId = state.localActiveQuestionId || (action.questionIds.length ? action.questionIds[0] : undefined);
             return Object.assign({}, state, {
-                questionIds: action.questionIds
+                questionIds: action.questionIds,
+                localActiveQuestionId: localActiveQuestionId,
+                activeQuestionId: (state.status === 'finished') ? localActiveQuestionId : state.remoteActiveQuestionId
             });
-        case C.SET_ACTIVE_QUESTION_ID:
+        case C.SET_REMOTE_ACTIVE_QUESTION_ID:
             return Object.assign({}, state, {
-                activeQuestionId: action.id
+                remoteActiveQuestionId: action.id,
+                activeQuestionId: (state.status !== 'finished') ? action.id : state.localActiveQuestionId
+            });
+        case C.SET_LOCAL_ACTIVE_QUESTION_ID:
+            return Object.assign({}, state, {
+                localActiveQuestionId: action.id,
+                activeQuestionId: (state.status === 'finished') ? action.id : state.remoteActiveQuestionId
             });
         case C.SET_ACTIVE_QUESTION:
             const activeQuestion = (action.id && action.data) ? {

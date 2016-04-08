@@ -7,28 +7,32 @@ export default (state = {}, action) => {
                 name: 'guest',
                 status: 'loggingIn',
                 uid: null,
-                admin: false
+                admin: false,
+                quizStatus: ''
             };
         case C.LOGIN:
 			return {
                 name: action.name,
                 status: 'loggedIn',
                 uid: action.uid,
-                admin: action.admin
+                admin: action.admin,
+                quizStatus: action.quizStatus
             };
         case C.LOGOUT:
 			return {
                 name: 'guest',
                 status: 'loggedOut',
                 uid: null,
-                admin: false
+                admin: false,
+                quizStatus: ''
             };
         case C.SIGNING_UP:
             return {
                 name: action.name,
                 status: 'signingUp',
                 uid: null,
-                admin: false
+                admin: false,
+                quizStatus: ''
             };
 		default:
 			return state;

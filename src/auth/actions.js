@@ -18,8 +18,9 @@ export default class {
 				dispatch({
 					type: C.LOGIN,
 					uid: uid,
-					name: val.name,
-					admin: val.admin
+					name: val ? val.name : '',
+					admin: val ? val.admin : false,
+					quizStatus: val ? val.quizStatus : ''
 				});
 				userRef.ref.child('online').set(true);
 				resolve(true);
@@ -32,7 +33,7 @@ export default class {
 						return dispatch({type: C.LOGOUT});
 					}
 					uid = authData.uid;
-					userRef.setRef(ref.child('users').child(authData.uid));
+					userRef.setRef(ref.child('users/' + authData.uid));
 
 					const connectedRef = ref.child('.info/connected');
 					const onlineRef = userRef.ref.child('online');
@@ -57,15 +58,17 @@ export default class {
 	}
 
 	static signup(name) {
-		return function(dispatch) {
+		return function(dispatch, getState) {
 			dispatch({type: C.SIGNING_UP, username: name});
 			ref.authAnonymously((error, authData) => {
 				if (error) {
 					dispatch({type: C.LOGOUT});
 				} else {
+					const {quiz} = getState();
 					AsyncStorage.setItem('authToken', authData.token);
-					ref.child('users').child(authData.uid).set({
-						name: name
+					ref.child('users/' + authData.uid).set({
+						name: name,
+						quizStatus: (quiz.status !== 'finished') ? 'interactive' : ''
 					});
 				}
 			});

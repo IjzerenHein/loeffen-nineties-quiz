@@ -13,7 +13,7 @@ const styles = StyleSheet.create({
 		color: Theme.themeColor,
 		fontFamily: Theme.fontFamily,
 		fontWeight: 'bold',
-		fontSize: 28,
+		fontSize: Theme.fontSize,
 		marginLeft: 20,
 		marginBottom: 20,
 		textAlign: 'left'
@@ -38,7 +38,7 @@ class ResultsView extends React.Component {
 			styleClass='vote'
 		/>);
 		return <ScrollView style={[style, styles.main]} >
-			<Text style={styles.title}>Resultaten:</Text>
+			<Text style={styles.title}>Standenlijst:</Text>
 			{buttons}
 		</ScrollView>
 	}
