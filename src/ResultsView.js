@@ -33,8 +33,8 @@ class ResultsView extends React.Component {
 		const buttons = quiz.results.map((result, index) => <Button
 			key={result.uid}
 			style={styles.button}
-			text={(index + 1) + '. ' + result.name + ' (' + result.totalAnsweredCorrect + ')'}
-			progress={result.totalAnsweredCorrect / result.totalQuestionsWithAnswer}
+			text={(index + 1) + '. ' + result.name + ' (' + result.points + ')'}
+			progress={result.points / result.totalPoints}
 			styleClass='vote'
 		/>);
 		return <ScrollView style={[style, styles.main]} >

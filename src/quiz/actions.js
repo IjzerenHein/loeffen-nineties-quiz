@@ -243,7 +243,10 @@ export default class Actions {
 			const questionsSmartRef = new FirebaseSmartRef(questionsRef);
 			const votesSmartRef = new FirebaseSmartRef(votesRef);
 			const usersSmartRef = new FirebaseSmartRef(usersRef);
-			Promise.all([questionsSmartRef.onValue(), votesSmartRef.onValue(), usersSmartRef.onValue()]).then(([questions, votes, users]) => {
+			const quizSmartRef = new FirebaseSmartRef(quizRef);
+			Promise.all([quizSmartRef.onValue(), questionsSmartRef.onValue(), votesSmartRef.onValue(), usersSmartRef.onValue()]).then(([quiz, questions, votes, users]) => {
+				quiz = quiz.snapshot ? quiz.snapshot.val() : {};
+				const totalBonusPointsToWin = quiz.bonusPointsToWin || 0;
 				users = users.snapshot ? users.snapshot.val() : {};
 				questions = questions.snapshot ? questions.snapshot.val() : {};
 				votes = votes.snapshot ? votes.snapshot.val() : {};
@@ -257,6 +260,7 @@ export default class Actions {
 						let totalQuestionsWithAnswer = 0;
 						let totalAnswered = 0;
 						let totalAnsweredCorrect = 0;
+						let bonusPoints = users[uid].bonusPoints || 0;
 						for (let j = 0; j < questionIds.length; j++) {
 							const question = questions[questionIds[j]];
 							totalQuestions++;
@@ -265,20 +269,23 @@ export default class Actions {
 							totalAnswered += (answer ? 1 : 0);
 							totalAnsweredCorrect += (question.answer && answer && (answer === question.answer)) ? 1 : 0;
 						}
+						const totalPoints = totalQuestionsWithAnswer + totalBonusPointsToWin;
 						results.push({
 							uid: uids[i],
 							name: users[uid].name,
 							totalQuestions,
 							totalQuestionsWithAnswer,
 							totalAnswered,
-							totalAnsweredCorrect
+							totalAnsweredCorrect,
+							points: totalAnsweredCorrect + bonusPoints,
+							totalPoints
 						});
 					}
 				}
 				results.sort((a, b) => {
-					if (a.totalAnsweredCorrect > b.totalAnsweredCorrect) {
+					if (a.points > b.points) {
 						return -1;
-					} else if (a.totalAnsweredCorrect < b.totalAnsweredCorrect) {
+					} else if (a.points < b.points) {
 						return 1;
 					} else {
 						return 0;
