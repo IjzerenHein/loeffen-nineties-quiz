@@ -89,23 +89,11 @@ class RootView extends React.Component {
 		} else if (this.props.auth.status === 'loggingIn') {
 			footer = <Loader style={styles.loader} size='large'/>;
 		} else if (this.props.auth.status === 'loggedIn') {
-			switch (this.props.quiz.status) {
-				case 'notStarted':
-				case 'started':
-					footer = <View>
-						<Text style={styles.footerText}>Hoi {this.props.auth.name}, je bent aangemeld!</Text>
-						<Text style={styles.footerText2}>De quiz gaat vanzelf van start...</Text>
-						<Loader style={styles.footerLoader} size='large'/>
-					</View>;
-					break;
-				case 'finished':
-					footer = <View>
-						<Text style={styles.footerText}>Dat was het dan,{'\n'}de quiz is afgelopen...</Text>
-						<Text style={styles.footerText2}>Bedankt voor het meedoen!{'\n'}Binnenkort zal de App bijgewerkt worden en zullen de vragen en antwoorden hier zichtbaar zijn.</Text>
-						<View style={styles.footerLoader} />
-					</View>;
-					break;
-			}
+			footer = <View>
+				<Text style={styles.footerText}>Hoi {this.props.auth.name}, je bent aangemeld!</Text>
+				<Text style={styles.footerText2}>De quiz gaat vanzelf van start...</Text>
+				<Loader style={styles.footerLoader} size='large'/>
+			</View>;
 		} else {
 			const signingUp = (this.props.auth.status === 'signingUp');
 			const editable = (this.props.auth.status === 'loggedOut');
