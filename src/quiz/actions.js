@@ -151,6 +151,16 @@ export default class Actions {
 				dispatch(Actions.updateResults());
 			}
 		});
+
+		//
+		// quiz.activeQuestionId
+		//
+		monitor(store, ['auth.adminMonitor', 'quiz.status', 'quiz.localActiveQuestionId', 'quiz.remoteActiveQuestionId'], ({auth, quiz}) => {
+			dispatch({
+				type: C.SET_ACTIVE_QUESTION_ID,
+				id: (auth.adminMonitor || (quiz.status !== 'finished')) ? quiz.remoteActiveQuestionId : quiz.localActiveQuestionId
+			});
+		});
 	}
 
 	static vote(questionId, optionId) {

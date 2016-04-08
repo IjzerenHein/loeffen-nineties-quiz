@@ -50,7 +50,7 @@ const TextButton = (props) => {
 };
 
 const AdminBar = (props) => {
-	const {style, quiz, dispatch,...viewProps} = props;
+	const {style, quiz, auth, dispatch,...viewProps} = props;
 	const question = quiz.activeQuestion;
 	const prevEnabled = (quiz.status !== 'notStarted') && question && (quiz.questionIds.indexOf(quiz.activeQuestion.id) > 0);
 	const nextEnabled = (quiz.status === 'started') && question && (question.status === 'closed') && (quiz.questionIds.indexOf(quiz.activeQuestion.id) < (quiz.questionIds.length - 1));
@@ -59,7 +59,7 @@ const AdminBar = (props) => {
 	return <View style={[style, styles.main]} {...viewProps}>
 		<Image style={styles.logo} source={require('../assets/loeffen-wit.png')} />
 		<Image style={styles.title} source={require('../assets/title.png')} />
-		<View style={styles.buttons}>
+		{!auth.adminMonitor ? <View style={styles.buttons}>
 			<TextButton
 				text='vorige'
 				disabled={!prevEnabled}
@@ -82,9 +82,9 @@ const AdminBar = (props) => {
 				icon='chevron-right'
 				iconAlign='right'
 				onPress={() => dispatch(QuizActions.nextQuestion())}/>}
-		</View>
+		</View> : <View />}
 	</View>;
 };
-export default connect(({quiz}) => {
-	return {quiz};
+export default connect(({quiz, auth}) => {
+	return {quiz, auth};
 })(AdminBar);

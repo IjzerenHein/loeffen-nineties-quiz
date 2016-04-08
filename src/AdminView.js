@@ -51,10 +51,9 @@ StartView = connect(({quiz}) => {return {quiz}})(StartView);
 
 class AdminView extends React.Component {
 	render() {
-		const {style, quiz, ...props} = this.props;
+		const {style, quiz, auth, ...props} = this.props;
 		let content;
-		//console.log('status, ', quiz);
-		if ((quiz.status === 'started') && quiz.activeQuestion) {
+		if (((quiz.status === 'started') || auth.adminMonitor) && quiz.activeQuestion) {
 			content = <AdminQuestionView style={styles.content} />;
 		} else if ((quiz.status === 'finished') && quiz.activeQuestion) {
 			content = <ResultsView style={styles.content} />;
@@ -67,6 +66,6 @@ class AdminView extends React.Component {
 		</View>;
 	}
 }
-export default connect(({quiz}) => {
-	return {quiz}
+export default connect(({quiz, auth}) => {
+	return {quiz, auth}
 })(AdminView);

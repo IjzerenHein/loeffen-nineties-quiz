@@ -69,7 +69,7 @@ class AppView extends React.Component {
 				this._navigateTo('reset', {type: 'admin'});
 			}
 		}
-		else if ((auth.status === 'loggedIn') && ((quiz.status === 'started') || ((quiz.status === 'finished') && !auth.quizStatus)) && quiz.activeQuestion) {
+		else if ((auth.status === 'loggedIn') && ((quiz.status === 'started') || (auth.adminMonitor) || ((quiz.status === 'finished') && !auth.quizStatus)) && quiz.activeQuestion) {
 			if (this.navigator && (!this.route || (this.route.type !== 'question') || (this.route.question.id !== quiz.activeQuestion.id))) {
 				this._navigateTo('push', {type: 'question', question: quiz.activeQuestion});
 			}

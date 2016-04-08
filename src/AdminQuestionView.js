@@ -68,27 +68,28 @@ const styles = StyleSheet.create({
 });
 
 const AdminQuestionView = (props) => {
-	const {style, dispatch, quiz} = props;
+	const {style, dispatch, quiz, auth} = props;
 	const question = quiz.activeQuestion;
 	const votes = question.votes || {};
 	const voteKeys = Object.keys(votes);
 	const buttons = Object.keys(question.options).map((optionId) => {
 		let count = 0;
-		if (question.resultsVisible) {
+		const resultsVisible = question.resultsVisible || auth.adminMonitor;
+		if (resultsVisible) {
 			voteKeys.forEach((key) => count += ((votes[key] === optionId) ? 1 : 0));
 		}
 		return <Button
 			key={optionId}
 			style={styles.button}
-			text={question.options[optionId]}
+			text={question.options[optionId] + (resultsVisible ? (' (' + count + ')') : '')}
 			progress={voteKeys.length ? (count / voteKeys.length) : 0}
 			styleClass='vote'
 		/>;
 	});
 
 	let answer;
-	if (question.answer && (question.status === 'closed')) {
-		answer = question.answerVisible ? 
+	if (question.answer && ((question.status === 'closed') || (auth.adminMonitor))) {
+		answer = (question.answerVisible || auth.adminMonitor) ? 
 		<Text style={styles.answer}>Antwoord: <Text style={{color: Theme.themeColor}}>{question.options[question.answer]}</Text></Text> :
 		<TouchableOpacity onPress={() => dispatch(QuizActions.showAnswer(!question.answerVisible))}>
 			<View style={styles.showAnswer}>
@@ -99,7 +100,7 @@ const AdminQuestionView = (props) => {
 			</View>
 		</TouchableOpacity>;
 	}
-	let showResults = (question.status === 'closed') ?
+	let showResults = ((question.status === 'closed') && !auth.adminMonitor) ?
 		<TouchableOpacity onPress={() => dispatch(QuizActions.showResults(!question.resultsVisible))}>
 			<View style={styles.showResults}>
 				<Text style={styles.showResultsText}>
@@ -125,6 +126,6 @@ const AdminQuestionView = (props) => {
 		</View>
 	</View>;
 };
-export default connect(({quiz}) => {
-	return {quiz};
+export default connect(({quiz, auth}) => {
+	return {quiz, auth};
 })(AdminQuestionView);

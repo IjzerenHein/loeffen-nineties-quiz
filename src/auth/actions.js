@@ -20,6 +20,7 @@ export default class {
 					uid: uid,
 					name: val ? val.name : '',
 					admin: val ? val.admin : false,
+					adminMonitor: val ? val.adminMonitor : false,
 					quizStatus: val ? val.quizStatus : ''
 				});
 				userRef.ref.child('online').set(true);

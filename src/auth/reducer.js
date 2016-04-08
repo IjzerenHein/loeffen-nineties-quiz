@@ -8,6 +8,7 @@ export default (state = {}, action) => {
                 status: 'loggingIn',
                 uid: null,
                 admin: false,
+                adminMonitor: false,
                 quizStatus: ''
             };
         case C.LOGIN:
@@ -16,6 +17,7 @@ export default (state = {}, action) => {
                 status: 'loggedIn',
                 uid: action.uid,
                 admin: action.admin,
+                adminMonitor: action.adminMonitor,
                 quizStatus: action.quizStatus
             };
         case C.LOGOUT:
@@ -24,6 +26,7 @@ export default (state = {}, action) => {
                 status: 'loggedOut',
                 uid: null,
                 admin: false,
+                adminMonitor: false,
                 quizStatus: ''
             };
         case C.SIGNING_UP:
@@ -32,6 +35,7 @@ export default (state = {}, action) => {
                 status: 'signingUp',
                 uid: null,
                 admin: false,
+                adminMonitor: false,
                 quizStatus: ''
             };
 		default:
