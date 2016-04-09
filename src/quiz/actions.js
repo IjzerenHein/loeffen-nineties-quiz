@@ -283,16 +283,19 @@ export default class Actions {
 							}
 						}
 						const totalPoints = totalQuestionsWithAnswer + totalBonusPointsToWin;
-						results.push({
-							uid: uids[i],
-							name: users[uid].name,
-							totalQuestions,
-							totalQuestionsWithAnswer,
-							totalAnswered,
-							totalAnsweredCorrect,
-							points: totalAnsweredCorrect + bonusPoints,
-							totalPoints
-						});
+						const points = totalAnsweredCorrect + bonusPoints;
+						if (totalAnswered) {
+							results.push({
+								uid: uids[i],
+								name: users[uid].name,
+								totalQuestions,
+								totalQuestionsWithAnswer,
+								totalAnswered,
+								totalAnsweredCorrect,
+								points,
+								totalPoints
+							});
+						}
 					}
 				}
 				results.sort((a, b) => {
