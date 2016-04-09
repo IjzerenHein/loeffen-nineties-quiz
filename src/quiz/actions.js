@@ -275,9 +275,12 @@ export default class Actions {
 							const question = questions[questionIds[j]];
 							totalQuestions++;
 							totalQuestionsWithAnswer += question.answer ? 1 : 0;
-							const answer = votes[questionIds[j]][uid];
-							totalAnswered += (answer ? 1 : 0);
-							totalAnsweredCorrect += (question.answer && answer && (answer === question.answer)) ? 1 : 0;
+							const questionVotes = votes[questionIds[j]];
+							if (questionVotes) {
+								const answer = questionVotes[uid];
+								totalAnswered += (answer ? 1 : 0);
+								totalAnsweredCorrect += (question.answer && answer && (answer === question.answer)) ? 1 : 0;
+							}
 						}
 						const totalPoints = totalQuestionsWithAnswer + totalBonusPointsToWin;
 						results.push({
