@@ -71,13 +71,13 @@ export default class Actions {
 				})
 			];
 			Promise.all(promises).then(([activeQuestion, myVote, votes]) => {
-				return activeQuestion.snapshot && myVote.snapshot && dispatch({
+				return activeQuestion && activeQuestion.snapshot && myVote && myVote.snapshot && dispatch({
 					type: C.SET_ACTIVE_QUESTION,
 					id: activeQuestion.snapshot.key(),
 					data: {
 						...activeQuestion.snapshot.val(),
 						vote: myVote.snapshot.val(),
-						votes: votes.snapshot ? votes.snapshot.val() : {}
+						votes: (votes && votes.snapshot) ? votes.snapshot.val() : {}
 					}
 				});
 			});
@@ -265,7 +265,7 @@ export default class Actions {
 				const results = [];
 				for (let i = 0; i < uids.length; i++) {
 					const uid = uids[i];
-					if (!users[uid].admin) {
+					if (!users[uid].admin && users[uid].name) {
 						let totalQuestions = 0;
 						let totalQuestionsWithAnswer = 0;
 						let totalAnswered = 0;
