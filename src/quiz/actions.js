@@ -88,19 +88,25 @@ export default class Actions {
 		//
 		let onlineUsersCount = 0;
 		const onlineUsersRef = new FirebaseSmartRef();
-		onlineUsersRef.on('child_added', () => {
-			onlineUsersCount++;
-			dispatch({
-				type: C.SET_ONLINE_USERS_COUNT,
-				count: onlineUsersCount
-			});
+		onlineUsersRef.on('child_added', (snapshot) => {
+			const user = snapshot.val();
+			if (!user.admin) {
+				onlineUsersCount++;
+				dispatch({
+					type: C.SET_ONLINE_USERS_COUNT,
+					count: onlineUsersCount
+				});
+			}
 		});
-		onlineUsersRef.on('child_removed', () => {
-			onlineUsersCount--;
-			dispatch({
-				type: C.SET_ONLINE_USERS_COUNT,
-				count: onlineUsersCount
-			});
+		onlineUsersRef.on('child_removed', (snapshot) => {
+			const user = snapshot.val();
+			if (!user.admin) {
+				onlineUsersCount--;
+				dispatch({
+					type: C.SET_ONLINE_USERS_COUNT,
+					count: onlineUsersCount
+				});
+			}
 		});
 		monitor(store, ['auth.admin'], ({auth}) => { 
 			if (!auth.admin) {
